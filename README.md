@@ -1,78 +1,92 @@
-# 🏭 AI Industrial Quality Control System (AIQCS)
+<div align="center">
+  <h1>🏭 AI Industrial Quality Control System (AIQCS)</h1>
+  <p><strong>Next-Generation Automated Visual Inspection & Defect Detection</strong></p>
 
-![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+  ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+  ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+  ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+  ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+  ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+</div>
 
-Welcome to **AIQCS**, a cutting-edge, end-to-end computer vision platform designed to automate and streamline industrial quality control. Using lightweight, high-speed deep learning models, AIQCS instantly inspects manufacturing products to classify them as either **Defective** or **Non-Defective**.
+<br />
 
----
+## 🚀 Overview
+**AIQCS (AI Industrial Quality Control System)** is an end-to-end, full-stack application designed to automate factory floor quality assurance. By combining a lightning-fast React frontend with a high-performance Python FastAPI backend, AIQCS allows factory operators to visually inspect manufacturing lines in real-time or via manual image uploads. 
 
-## 🚀 Key Features
-*   **Dual Detection Modes:** Inspect products via direct **Image Upload** or **Real-Time Camera** feeds.
-*   **Strict Model Isolation:** Each product type routes to its own highly specialized neural network, ensuring maximum accuracy and zero cross-contamination.
-*   **Live Analytics Dashboard:** Track inspection history, view defect rates in real-time, and manage quality assurance trends over time.
-*   **Lightning Fast:** Powered by edge-optimized `MobileNetV2` models for ultra-low latency inference.
-
----
-
-## 📦 Trained Products
-The system has been rigorously trained on thousands of customized industrial images to inspect the following production lines:
-
-1.  🚗 **Cars** (Surface & structural integrity)
-2.  📦 **Cardboard Boxes** (Tears, crushes, and water damage)
-3.  📱 **Mobile Phones** (Screen cracks, casing defects)
-4.  🍾 **Plastic Bottles** (Dents, label tears, cap misalignment)
-5.  🏗️ **Steel Surfaces** (Rust, scratches, industrial wear)
+The core of the system relies on highly optimized **MobileNetV2** deep learning models trained specifically to distinguish between perfectly manufactured products and defective ones with extreme precision.
 
 ---
 
-## 💻 Tech Stack
-**Frontend (User Interface)**
-*   **React + Vite** (TypeScript)
-*   **Tailwind CSS** + **shadcn/ui** for beautiful, responsive design
-*   State management via **Zustand**
+## 📦 Supported Products
+The system is actively trained on **five distinct manufacturing pipelines**. Our dedicated `MobileNetV2` models have been rigorously trained and validated on thousands of images to classify products as **Defective** or **Non-Defective**:
 
-**Backend (AI & API)**
-*   **FastAPI** (Python) for blazing-fast asynchronous endpoints
-*   **TensorFlow / Keras** for deep learning inference
-*   **SQLite** for local database tracking and historical logs
-
-**AI Architecture**
-*   **MobileNetV2**: A highly efficient convolutional neural network acting as a binary classifier (Defective vs. Non-Defective) for each independent product.
+1. 🚗 **Cars (Automotive)** - Paint scratches, structural dents, assembly defects.
+2. 📦 **Cardboard Boxes** - Crushed corners, tears, water damage, print smudges.
+3. 📱 **Mobile Phones** - Cracked screens, casing scratches, lens damage.
+4. 🧴 **Plastic Bottles** - Deformed plastic, cap missing/misaligned, label tearing.
+5. 🛡️ **Steel Surfaces** - Pitting, rust, scuff marks, surface cracking.
 
 ---
 
-## 🖥️ Project Pages Overview
-*   📊 **Dashboard:** The central hub. Get an at-a-glance view of total inspections, defect rates, and recent system activity.
-*   📤 **Upload Detection:** Select your product category and upload batch images. The AI will highlight which items pass and which fail.
-*   🎥 **Real-Time Detection:** Connect an industrial webcam to process items continuously as they move down the assembly line.
-*   📈 **Analytics:** Dive deep into historical statistics and defect trends to help optimize your manufacturing processes.
+## ✨ Features & Interface
+
+- 📊 **Executive Dashboard**: Get real-time analytical insights into defect rates, total scans, and historical quality control data.
+- 📤 **Frictionless Uploading**: Drag and drop product images straight into the UI. Select the product pipeline, and the backend dynamically routes your image to the correct neural network.
+- 📷 **Real-time Camera Feed**: Connect factory inspection cameras directly to the web app for live, continuous prediction streaming.
+- 🔐 **Secure Architecture**: Complete JWT authentication, user settings, and role-based access control.
 
 ---
 
-## 🛠️ How to Run Locally
+## 🧠 Core AI Architecture
 
-### 1. Start the AI Backend
-```bash
+AIQCS strictly enforces **Model Isolation**. Instead of one monolithic model trying to guess everything, the FastAPI backend hosts **five specialized `.h5` MobileNetV2 models** loaded dynamically in memory.
+
+**Inference Pipeline:**
+1. **User Action:** Image uploaded via React frontend with the `product_type` explicitly declared.
+2. **Dynamic Routing:** FastAPI backend dynamically routes the tensor to the corresponding production model (e.g., `plastic_bottles_model.h5`).
+3. **Feature Extraction:** Deep convolutional layers extract visual patterns.
+4. **Binary Classification:** A dense head evaluates the features outputting exact probability thresholds for `Defective` vs `Non_Defective`.
+
+---
+
+## 💻 How to Run the Project Locally
+
+You will need two terminal windows to run both the backend and frontend development servers.
+
+### 1. Start the Backend (FastAPI / TensorFlow)
+Open a terminal (`cmd` or PowerShell) and run:
+
+```cmd
 cd backend
 python -m venv .venv
-# Activate virtual environment (.venv\Scripts\activate on Windows)
+.venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
-*The API will be available at `http://localhost:8000/docs`*
+*The backend API will start on `http://localhost:8000`*
 
-### 2. Start the Frontend
-```bash
+### 2. Start the Frontend (React / Vite)
+Open a **second** terminal and run:
+
+```cmd
 cd frontend
 npm install
 npm run dev
 ```
-*The web dashboard will be available at `http://localhost:5173`*
+*The UI will start on `http://localhost:5173`*
+
+*(Alternatively, you can double-click the `AIQCS.bat` file in the root directory to automatically launch both systems simultaneously on Windows).*
 
 ---
 
-*Note: The highly specialized `14+ GB` raw image datasets used to train these models are intentionally kept offline and are not included in this repository to comply with standard size constraints.*
+## 🛠️ How to Use the System
+1. **Login**: Navigate to `http://localhost:5173` and log in (Default admin credentials if seeded: `admin@example.com` / `password123`).
+2. **Navigate to Upload**: Click on the **Upload Detection** page.
+3. **Select Pipeline**: Use the dropdown to explicitly select the product you are scanning (e.g., *Plastic Bottles*).
+4. **Upload**: Drag and drop an inspection image.
+5. **Analyze**: Click **Run AI**. The image is routed to the specialized AI model, and the result (Defective or Non-Defective) along with confidence metrics will instantly appear on the screen!
+
+---
+*Built with modern web technologies and deep learning to modernize industrial inspection.*
