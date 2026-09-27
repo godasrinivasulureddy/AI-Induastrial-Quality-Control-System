@@ -1,5 +1,5 @@
 import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
-import { CheckCircle2, FileVideo, Image, UploadCloud } from "lucide-react";
+import { CheckCircle2, FileVideo, Image, UploadCloud, Camera, X } from "lucide-react";
 
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
@@ -30,10 +30,58 @@ export function UploadDetectionPage() {
   const inFlight = useRef<AbortController | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // Camera state
+  const [isCameraActive, setIsCameraActive] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
   useEffect(() => () => {
     inFlight.current?.abort();
     inFlight.current = null;
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+    }
   }, []);
+
+  const openCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      setIsCameraActive(true);
+    } catch (err) {
+      setError("Could not access the camera. Please check permissions.");
+    }
+  };
+
+  const closeCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+    setIsCameraActive(false);
+  };
+
+  const captureImage = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement("canvas");
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], `capture_${Date.now()}.jpg`, { type: "image/jpeg" });
+            setFiles((prev) => [...prev, { id: crypto.randomUUID(), file }]);
+            closeCamera();
+          }
+        }, "image/jpeg");
+      }
+    }
+  };
 
   const changeProduct = (product: string) => {
     if (inFlight.current) return;
@@ -180,11 +228,26 @@ export function UploadDetectionPage() {
         onDragOver={(event) => event.preventDefault()}
         onDrop={handleDrop}
       >
-        <UploadCloud className="mx-auto h-10 w-10 text-cyan-200" />
-        <h2 className="mt-4 text-xl font-semibold text-white">Drop product media here</h2>
-        <p className="mt-2 text-sm text-zinc-500">Images are persisted to prediction history. Videos return frame-level inference summary.</p>
-        <input ref={inputRef} id="upload-input" type="file" multiple accept="image/*,video/*" className="hidden" disabled={running} onChange={handleChange} />
-        <Button className="mt-5" disabled={running} onClick={() => inputRef.current?.click()}>Browse files</Button>
+        {isCameraActive ? (
+          <div className="flex flex-col items-center">
+            <video ref={videoRef} autoPlay playsInline className="h-[400px] w-full max-w-[600px] rounded-md object-cover bg-black" />
+            <div className="mt-5 flex items-center justify-center gap-4">
+              <Button onClick={captureImage}><Camera className="mr-2 h-4 w-4" /> Capture Photo</Button>
+              <Button variant="secondary" onClick={closeCamera}><X className="mr-2 h-4 w-4" /> Cancel</Button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <UploadCloud className="mx-auto h-10 w-10 text-cyan-200" />
+            <h2 className="mt-4 text-xl font-semibold text-white">Drop product media here</h2>
+            <p className="mt-2 text-sm text-zinc-500">Images are persisted to prediction history. Videos return frame-level inference summary.</p>
+            <input ref={inputRef} id="upload-input" type="file" multiple accept="image/*,video/*" className="hidden" disabled={running} onChange={handleChange} />
+            <div className="mt-5 flex justify-center gap-3">
+              <Button disabled={running} onClick={() => inputRef.current?.click()}>Browse files</Button>
+              <Button variant="secondary" disabled={running} onClick={openCamera}><Camera className="mr-2 h-4 w-4" /> Open Camera</Button>
+            </div>
+          </>
+        )}
       </Panel>
 
       <div className="grid gap-4 xl:grid-cols-[0.8fr_1.2fr]">
