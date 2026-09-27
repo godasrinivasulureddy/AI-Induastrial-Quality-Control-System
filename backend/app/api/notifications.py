@@ -29,3 +29,11 @@ async def mark_notification_read(
     if not notification:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Notification not found")
     return notification
+
+@router.delete("/", status_code=status.HTTP_204_NO_CONTENT, tags=["Notifications"])
+async def clear_all_notifications(
+    db: Session = Depends(get_db),
+    current_user: DBUser = Depends(get_current_active_user),
+):
+    crud_platform.delete_all_notifications(db, user_id=current_user.id)
+    return None

@@ -47,6 +47,10 @@ class PlatformCRUD:
             .all()
         )
 
+    def delete_all_notifications(self, db: Session, user_id: int) -> None:
+        db.query(Notification).filter(Notification.user_id == user_id).delete(synchronize_session=False)
+        db.commit()
+
     def mark_notification_read(self, db: Session, notification_id: int, user_id: int) -> Optional[Notification]:
         obj = db.query(Notification).filter(Notification.id == notification_id, Notification.user_id == user_id).first()
         if not obj:

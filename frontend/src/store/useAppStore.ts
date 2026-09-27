@@ -13,6 +13,8 @@ interface AppState {
   setSidebarOpen: (value: boolean) => void;
   bootstrap: () => Promise<void>;
   fetchNotifications: () => Promise<void>;
+  markAsRead: (id: string | number) => Promise<void>;
+  clearNotifications: () => Promise<void>;
   logout: () => void;
 }
 
@@ -62,6 +64,27 @@ export const useAppStore = create<AppState>((set, get) => ({
     if (!get().token) return;
     const response = await api.get<NotificationItem[]>("/notifications/");
     set({ notifications: response.data });
+  },
+  markAsRead: async (id) => {
+    if (!get().token) return;
+    try {
+      await api.patch(`/notifications/${id}/read`);
+      set((state) => ({
+        notifications: state.notifications.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
+      }));
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  clearNotifications: async () => {
+    if (!get().token) return;
+    try {
+      await api.delete("/notifications/");
+      set({ notifications: [] });
+    } catch (e) {
+      console.error(e);
+      set({ notifications: [] }); // Clear locally if endpoint is missing
+    }
   },
   logout: () => {
     // 1. Idempotently clear local token storage with a try-catch safety wrapper
