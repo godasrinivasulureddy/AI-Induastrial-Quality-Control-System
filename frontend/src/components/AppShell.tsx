@@ -140,8 +140,8 @@ export function AppShell() {
               <Button variant="secondary" size="icon" onClick={() => navigate("/notifications")}>
                 <Bell className="h-4 w-4" />
               </Button>
-              <Button variant="secondary" size="icon" onClick={() => navigate("/contact")}>
-                <Contact className="h-4 w-4" />
+              <Button variant="secondary" size="icon" onClick={() => navigate("/profile")}>
+                <UserCircle className="h-4 w-4" />
               </Button>
             </div>
           </div>

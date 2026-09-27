@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     PROJECT_DESCRIPTION: str = "API for industrial quality control with AI-powered defect detection."
     SECRET_KEY: str = os.getenv("SECRET_KEY")  # Must be set in environment
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 14400
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # Dynamically locate the backend base directory absolutely
