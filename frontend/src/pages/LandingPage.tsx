@@ -66,13 +66,13 @@ export function LandingPage() {
       </header>
 
       <main>
-        <section className="mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl items-center gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.3fr_0.7fr]">
+        <section className="mx-auto grid min-h-[calc(100vh-4rem)] max-w-[1400px] items-center gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.4fr_0.6fr]">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <Badge className="mb-5 border-cyan-300/30 bg-cyan-300/10 text-cyan-100">
               <Sparkles className="h-3.5 w-3.5" />
               Industrial computer vision SaaS
             </Badge>
-            <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] text-white sm:text-6xl lg:text-7xl">
+            <h1 className="max-w-[1000px] text-5xl font-semibold leading-[1.05] text-white sm:text-6xl lg:text-[4.25rem]">
               <span className="whitespace-nowrap">AI Quality Control System</span> <br />
               for modern production lines
             </h1>
@@ -117,17 +117,17 @@ export function LandingPage() {
                   <Badge className="border-emerald-300/30 bg-emerald-400/10 text-emerald-200">Online</Badge>
                 </div>
               </div>
-              <div className="grid gap-4 p-4 md:grid-cols-[1.3fr_0.7fr]">
+              <div className="grid gap-4 p-4 md:grid-cols-[1.4fr_0.6fr]">
                 <div className="relative aspect-video overflow-hidden rounded-md border border-white/10 bg-zinc-950">
                   <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px),linear-gradient(rgba(255,255,255,.04)_1px,transparent_1px)] bg-[size:32px_32px]" />
-                  <div className="absolute left-[20%] top-[18%] h-[42%] w-[55%] rounded-md border-2 border-cyan-300 shadow-[0_0_24px_rgba(103,232,249,.55)]">
-                    <span className="absolute -top-8 left-0 rounded-md bg-cyan-300 px-2 py-1 text-xs font-semibold text-zinc-950 whitespace-nowrap">
+                  <div className="absolute left-[20%] top-[25%] h-[45%] w-[55%] rounded-md border-2 border-cyan-300 shadow-[0_0_24px_rgba(103,232,249,.55)]">
+                    <span className="absolute -top-5 left-0 rounded-sm bg-cyan-300 px-1.5 py-0.5 text-[9px] font-bold text-zinc-950 whitespace-nowrap">
                       surface anomaly 93.4%
                     </span>
                   </div>
-                  <div className="absolute bottom-4 left-4 flex gap-2">
-                    <Badge>FPS 28</Badge>
-                    <Badge>YOLO-ready</Badge>
+                  <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5">
+                    <Badge className="px-1.5 py-0 text-[9px] leading-tight">FPS 28</Badge>
+                    <Badge className="px-1.5 py-0 text-[9px] leading-tight">YOLO-ready</Badge>
                   </div>
                 </div>
                 <div className="space-y-3">
