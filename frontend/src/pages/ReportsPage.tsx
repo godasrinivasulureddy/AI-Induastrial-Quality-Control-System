@@ -187,14 +187,16 @@ ${selectedRecords.map((r, i) => `    <tr><td>${i + 1}</td><td><span class="badge
                   </td>
                   <td className="px-4 py-3 text-zinc-400">{index + 1}</td>
                   <td className="px-4 py-3">
-                    <span className={`rounded-md border px-2 py-1 text-xs ${classForPrediction(item.prediction_label)}`}>
+                    <span className={`whitespace-nowrap rounded-md border px-2 py-1 text-xs ${classForPrediction(item.prediction_label)}`}>
                       {item.prediction_label}
                     </span>
                   </td>
                   <td className="px-4 py-3">{percent(item.confidence_score, 2)}</td>
                   <td className="px-4 py-3 text-zinc-400">{item.source || "ai"}</td>
-                  <td className="px-4 py-3 text-zinc-400">{item.model_version || "-"}</td>
-                  <td className="px-4 py-3 text-zinc-400">{formatDateTime(item.timestamp)}</td>
+                  <td className="max-w-[150px] truncate px-4 py-3 text-zinc-400" title={item.model_version || ""}>
+                    {item.model_version || "-"}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 text-zinc-400">{formatDateTime(item.timestamp)}</td>
                 </tr>
               ))}
             </tbody>
