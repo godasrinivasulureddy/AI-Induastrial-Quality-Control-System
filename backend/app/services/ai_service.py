@@ -84,43 +84,31 @@ class AIInferenceService:
         self.tf_model_path = str((ROOT_DIR / settings.TF_DEFECT_MODEL_PATH).resolve())
         self.load_errors = []
 
-        # Load product-specific TensorFlow Keras models
+        # Lazy Load product-specific TensorFlow Keras models
         try:
-            from tensorflow.keras.models import load_model  # type: ignore
-            models_dir = ROOT_DIR / "AI_Quality_Control_System" / "models"
+            self._models_dir = ROOT_DIR / "AI_Quality_Control_System" / "models"
             for pt, filename in PRODUCT_MODEL_FILES.items():
-                model_file = models_dir / filename
-                try:
-                    if not model_file.is_file():
-                        raise FileNotFoundError(f"Model not found: {model_file}")
-                    checksum = hashlib.sha256(model_file.read_bytes()).hexdigest()
-                    logger.info("Loading TensorFlow classifier for %s from %s...", pt, model_file)
-                    model = load_model(str(model_file))
-                    if tuple(model.input_shape[1:]) != (224, 224, 3) or tuple(model.output_shape[1:]) != (2,):
-                        raise ValueError("Expected a 224x224 RGB classifier with two class scores")
-                    if hashlib.sha256(model_file.read_bytes()).hexdigest() != checksum:
-                        raise ValueError("Model changed while loading; restart after deployment completes")
-                    self.keras_models[pt] = model
-                    self.product_model_metadata[pt] = {
-                        "model_id": model_file.stem,
-                        "model_version": f"{model_file.stem}:sha256:{checksum}",
-                        "model_checksum": checksum,
-                    }
-                    logger.info("✓ TensorFlow classifier for %s loaded successfully!", pt)
-                except Exception as exc:
-                    msg = f"Classifier unavailable for {pt}: {exc}"
-                    logger.error(msg)
-                    self.load_errors.append(msg)
+                model_file = self._models_dir / filename
+                if model_file.is_file():
+                    try:
+                        checksum = hashlib.sha256(model_file.read_bytes()).hexdigest()
+                        self.product_model_metadata[pt] = {
+                            "model_id": model_file.stem,
+                            "model_version": f"{model_file.stem}:sha256:{checksum}",
+                            "model_checksum": checksum,
+                        }
+                        self.keras_models[pt] = None
+                    except Exception as exc:
+                        msg = f"Metadata checksum failed for {pt}: {exc}"
+                        logger.error(msg)
+                        self.load_errors.append(msg)
             
             if self.keras_models:
                 self.source = "tf-classifier"
                 # Keep legacy variables populated for backwards compatibility
                 if "mobile" in self.keras_models:
-                    self.tf_model = self.keras_models["mobile"]
                     self.model_version = "mobile_model"
-                    self.model_path = str(models_dir / "mobile_model.h5")
-        except ImportError:
-            logger.info("TensorFlow not available, skipping TF classifiers")
+                    self.model_path = str(self._models_dir / "mobile_model.h5")
         except Exception as e:
             msg = f"Could not load TensorFlow classifiers: {e}"
             logger.error(msg, exc_info=True)
@@ -166,12 +154,12 @@ class AIInferenceService:
 
     @property
     def model_loaded(self) -> bool:
-        return self.tf_model is not None or self.model is not None
+        return bool(self.keras_models) or self.model is not None
 
     def status(self) -> Dict[str, Any]:
         return {
             "model_loaded": self.model_loaded,
-            "tf_model_loaded": self.tf_model is not None,
+            "tf_model_loaded": bool(self.keras_models),
             "yolo_model_loaded": self.model is not None,
             "tf_model_path": self.tf_model_path,
             "yolo_model_path": self.model_path if self.source == "yolov8" else str((ROOT_DIR / settings.AI_MODEL_PATH).resolve()),
@@ -330,8 +318,30 @@ class AIInferenceService:
             "object_model_version": self.model_version,
         }
 
+    def _get_model(self, product_type: str):
+        if product_type not in self.keras_models:
+            return None
+        with self.product_model_locks[product_type]:
+            if self.keras_models[product_type] is not None:
+                return self.keras_models[product_type]
+            try:
+                from tensorflow.keras.models import load_model  # type: ignore
+                model_file = self._models_dir / PRODUCT_MODEL_FILES[product_type]
+                logger.info("Lazy loading TensorFlow classifier for %s from %s...", product_type, model_file)
+                model = load_model(str(model_file))
+                if tuple(model.input_shape[1:]) != (224, 224, 3) or tuple(model.output_shape[1:]) != (2,):
+                    raise ValueError("Expected a 224x224 RGB classifier with two class scores")
+                self.keras_models[product_type] = model
+                logger.info("✅ TensorFlow classifier for %s lazy-loaded successfully!", product_type)
+                return model
+            except Exception as e:
+                msg = f"Failed to lazy load model {product_type}: {e}"
+                logger.error(msg)
+                self.load_errors.append(msg)
+                return None
+
     def _tf_classify(self, image_path: str, threshold: float = 0.5, product_type: str = "mobile", strict: bool = False) -> Optional[Dict[str, Any]]:
-        model = self.keras_models.get(product_type)
+        model = self._get_model(product_type)
         if model is None:
             if strict:
                 raise ProductModelUnavailable(f"Trained model unavailable for {product_type}")
