@@ -1,6 +1,6 @@
 import { FormEvent, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, UserRound } from "lucide-react";
+import { Eye, EyeOff, Mail, UserRound, ArrowLeft } from "lucide-react";
 
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -47,8 +47,13 @@ export function SignupPage() {
 
   return (
     <div className="grid min-h-screen place-items-center bg-surface-950 px-4 py-10 text-white">
-      <Panel className="w-full max-w-lg p-6">
-        <Link to="/" className="mb-6 inline-flex items-center gap-2 text-sm text-cyan-200">OptiVision AI</Link>
+      <Panel className="relative w-full max-w-lg p-6">
+        <div className="mb-6 flex items-center justify-between">
+          <Link to="/" className="inline-flex items-center gap-2 text-sm text-cyan-200">OptiVision AI</Link>
+          <Link to="/" className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-white">
+            <ArrowLeft className="h-4 w-4" /> Back
+          </Link>
+        </div>
         <h1 className="text-3xl font-semibold">Create workspace</h1>
         <p className="mt-2 text-sm text-zinc-400">Register an operator profile connected to the FastAPI database.</p>
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
