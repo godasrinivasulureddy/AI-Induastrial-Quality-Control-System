@@ -260,7 +260,7 @@ export function UploadDetectionPage() {
         <Panel className="p-5">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-white">Batch queue</h2>
-            <Button disabled={!files.length || running} onClick={runBatch}><CheckCircle2 className="h-4 w-4" />Run AI</Button>
+            <Button disabled={!files.length || running} onClick={runBatch}><CheckCircle2 className="mr-2 h-4 w-4" />Prediction</Button>
           </div>
           <div className="mt-4 h-2 rounded-full bg-white/10">
             <div className="h-full rounded-full bg-cyan-300 transition-all" style={{ width: `${progress}%` }} />
