@@ -239,7 +239,7 @@ export function RealtimeDetectionPage() {
         detectionIntervalRef.current = null;
       }
     };
-  }, [isDetecting, stream, threshold, saveDetection]);
+  }, [isDetecting, stream, threshold, saveDetection, productType]);
 
   const captureScreenshot = () => {
     const image = captureFrame();
