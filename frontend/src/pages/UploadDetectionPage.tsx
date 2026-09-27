@@ -169,6 +169,8 @@ export function UploadDetectionPage() {
           <option value="mobile">Mobile</option>
           <option value="cardboard_boxes">Cardboard Boxes</option>
           <option value="cars">Cars</option>
+          <option value="plastic_bottles">Plastic Bottles</option>
+          <option value="steel_surface">Steel Surface</option>
         </select>
       </div>
       <p className="text-sm text-zinc-500">Changing product clears pending files. Completed predictions remain in History.</p>

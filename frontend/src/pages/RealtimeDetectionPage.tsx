@@ -418,6 +418,22 @@ export function RealtimeDetectionPage() {
                 ))}
               </select>
             </label>
+            
+            <label className="mt-4 block text-sm text-zinc-400">
+              Target Product Pipeline
+              <select
+                value={productType}
+                onChange={(e) => setProductType(e.target.value)}
+                className="mt-2 h-10 w-full rounded-md border border-white/10 bg-zinc-900 px-3 text-sm text-zinc-100 outline-none focus:border-cyan-300 focus:ring-1 focus:ring-cyan-300/40"
+              >
+                <option value="mobile">Mobile</option>
+                <option value="cardboard_boxes">Cardboard Boxes</option>
+                <option value="cars">Cars</option>
+                <option value="plastic_bottles">Plastic Bottles</option>
+                <option value="steel_surface">Steel Surface</option>
+              </select>
+            </label>
+
             <label className="mt-4 block text-sm text-zinc-400">
               Confidence threshold: {(threshold * 100).toFixed(0)}%
               <input className="mt-3 w-full accent-cyan-300" type="range" min="0.3" max="0.95" step="0.05" value={threshold} onChange={(event) => setThreshold(Number(event.target.value))} />
