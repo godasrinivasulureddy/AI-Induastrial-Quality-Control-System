@@ -65,4 +65,3 @@ weights/
 *.h5.bak
 *backup*.h5
 
-dataset/
