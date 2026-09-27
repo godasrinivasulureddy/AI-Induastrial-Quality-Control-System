@@ -1,0 +1,68 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+.ruff_cache/
+.pytest_cache/
+.eslintcache
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Database files (SQLite binaries)
+*.db
+sql_app.db
+
+# Log files
+*.log
+backend.log
+frontend.log
+
+# Node dependencies and builds
+node_modules/
+dist/
+.claude/
+
+# Local configuration / secrets
+.env
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python coverage
+.coverage
+htmlcov/
+
+# Environment files
+.env.*
+!.env.example
+
+# Build artifacts
+build/
+
+# IDE
+.idea/
+
+# AI models / caches
+.ollama/
+
+# AIQCS Datasets & AI Artifacts Exclusions
+uploads/
+uploads_v2/
+datasets/
+dataset_mobile_v1/
+mobile_dataset_clean/
+archive/
+runs/
+weights/
+*.pt
+*.h5.bak
+*backup*.h5
+
+dataset/
