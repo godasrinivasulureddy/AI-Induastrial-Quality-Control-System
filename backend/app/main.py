@@ -12,7 +12,11 @@ from pathlib import Path
 # Core settings
 from .core.config import settings
 
+import logging
 logger = logging.getLogger("app.main")
+
+# Suppress annoying TensorFlow ABSL warnings (like "No training configuration found")
+logging.getLogger("absl").setLevel(logging.ERROR)
 
 # Database imports
 from .database.base import Base, engine

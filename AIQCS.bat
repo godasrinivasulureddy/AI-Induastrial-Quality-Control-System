@@ -6,7 +6,9 @@ echo ==================================================
 echo.
 
 echo [1/2] Starting Backend Server (FastAPI)...
-start "AIQCS Backend" cmd /k "cd /d "%~dp0backend" && call .venv\Scripts\activate.bat && uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+:: Removed --reload to prevent asyncio CancelledError tracebacks on Ctrl+C in Windows
+:: Added TF environment variables to suppress TensorFlow C++ spam
+start "AIQCS Backend" cmd /k "cd /d "%~dp0backend" && call .venv\Scripts\activate.bat && set TF_CPP_MIN_LOG_LEVEL=3 && set TF_ENABLE_ONEDNN_OPTS=0 && uvicorn app.main:app --host 127.0.0.1 --port 8000"
 
 echo [2/2] Starting Frontend Server (React)...
 start "AIQCS Frontend" cmd /k "cd /d "%~dp0frontend" && npm.cmd run dev"

@@ -55,6 +55,7 @@ build/
 # AIQCS Datasets & AI Artifacts Exclusions
 uploads/
 uploads_v2/
+analytics/
 datasets/
 dataset_mobile_v1/
 mobile_dataset_clean/
@@ -64,4 +65,5 @@ weights/
 *.pt
 *.h5.bak
 *backup*.h5
+count_dataset.py
 

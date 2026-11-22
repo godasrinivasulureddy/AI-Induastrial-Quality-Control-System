@@ -1,0 +1,2 @@
+cd c:/AIQCS
+AIQCS.bat
